@@ -47,7 +47,6 @@ Você pode simplesmente abrir o arquivo `index.html` no navegador.
 
 Para trabalhar no VS Code, recomendo a extensão **Live Server** e abrir o projeto por ela.
 
-<<<<<<< HEAD
 ## Configurar contatos
 
 O WhatsApp e o Instagram ficam em um único lugar:
@@ -65,8 +64,6 @@ const CONFIG = {
 ```
 
 Trocar esses valores altera ao mesmo tempo o botão "Finalizar pelo WhatsApp" do carrinho e os links do rodapé das 3 páginas.
-=======
->>>>>>> e2f0425b759838459a264fca92d59e15fc9e3b38
 
 ## Cadastrar produtos
 
@@ -84,7 +81,6 @@ Exemplo:
   nome: "Bolsa Aurora",
   categoria: "Bolsas",
   preco: 85,
-<<<<<<< HEAD
   imagem: "img/produtos/bolsa-aurora.webp",
   descricao: "Bolsa artesanal em crochê.",
   destaque: true // opcional: aparece em "Destaques" na página inicial
@@ -106,8 +102,3 @@ O repositório está em `github.com/gabrielsdl-dev/AnaLu-Croches`.
 4. Depois de alguns minutos o site fica disponível em `https://gabrielsdl-dev.github.io/AnaLu-Croches/`.
 
 Se o site for publicado em outro endereço, troque esse endereço nas tags `og:url` e `og:image` do `<head>` das 3 páginas (é o que gera a prévia do link no WhatsApp e no Instagram).
-=======
-  descricao: "Bolsa artesanal em crochê.",
-}
-```
->>>>>>> e2f0425b759838459a264fca92d59e15fc9e3b38
