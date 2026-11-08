@@ -1,36 +1,44 @@
-# Ana Crochê — Loja de encomendas
+# AnaLu Crochês — Loja de encomendas
 
 Projeto acadêmico de uma vitrine virtual para venda de peças artesanais em crochê.
 
 ## Funcionalidades atuais
 
-- Página inicial responsiva
+- Página inicial responsiva, com produtos em destaque
 - Catálogo de produtos
-- Filtro por categoria
-- Busca de produtos
+- Filtro por categoria (aparece quando houver mais de uma categoria)
+- Busca de produtos (ignora acentos e maiúsculas)
 - Carrinho usando `localStorage`
 - Alteração de quantidade
 - Exclusão de itens
 - Total estimado do pedido
 - Campo para nome e observações
 - Finalização da encomenda pelo WhatsApp
+- Tema claro e escuro (segue o sistema quando não há escolha salva)
 - Layout responsivo para celular
 
 ## Estrutura
 
 ```text
-loja-croche/
+AnaLu-Croches/
 ├── index.html
 ├── produtos.html
 ├── carrinho.html
 ├── css/
 │   └── style.css
 ├── js/
-│   ├── produtos.js
+│   ├── config.js        ← nome da loja, WhatsApp e Instagram
+│   ├── produtos.js      ← catálogo de produtos
 │   ├── carrinho.js
 │   └── main.js
 └── img/
-    └── produtos/
+    ├── croche-artesanal-hero.webp
+    ├── logo-analu-transparente.webp
+    ├── favicon-32.png
+    ├── apple-touch-icon.png
+    ├── og-image.jpg     ← prévia do link no WhatsApp/Instagram (1200×630)
+    ├── produtos/        ← fotos dos produtos (.webp)
+    └── originais/       ← imagens originais em alta, não usadas pelo site
 ```
 
 ## Como abrir
@@ -39,31 +47,23 @@ Você pode simplesmente abrir o arquivo `index.html` no navegador.
 
 Para trabalhar no VS Code, recomendo a extensão **Live Server** e abrir o projeto por ela.
 
-## Configurar o WhatsApp
+## Configurar contatos
 
-Abra:
+O WhatsApp e o Instagram ficam em um único lugar:
 
 ```text
-js/carrinho.js
+js/config.js
 ```
-
-Procure por:
 
 ```js
-const telefoneWhatsApp = "5511999999999";
+const CONFIG = {
+  nomeLoja: "AnaLu Crochês",
+  whatsapp: "5511999999999", // 55 + DDD + número, só dígitos
+  instagram: "https://www.instagram.com/USUARIO/"
+};
 ```
 
-Troque pelo número real, sempre usando:
-
-```text
-55 + DDD + número
-```
-
-Exemplo:
-
-```text
-5511988887777
-```
+Trocar esses valores altera ao mesmo tempo o botão "Finalizar pelo WhatsApp" do carrinho e os links do rodapé das 3 páginas.
 
 ## Cadastrar produtos
 
@@ -77,26 +77,28 @@ Exemplo:
 
 ```js
 {
-  id: 1,
+  id: 10,
   nome: "Bolsa Aurora",
   categoria: "Bolsas",
   preco: 85,
-  emoji: "👜",
+  imagem: "img/produtos/bolsa-aurora.webp",
   descricao: "Bolsa artesanal em crochê.",
-  destaque: true
+  destaque: true // opcional: aparece em "Destaques" na página inicial
 }
 ```
 
-Por enquanto usamos emojis como imagem temporária. Depois podemos trocar por fotos reais dos crochês.
+- `id` precisa ser único.
+- Coloque a foto em `img/produtos/`. De preferência em WebP, com até ~800px de largura e menos de 100 KB.
+- Sem `imagem`, o card mostra "Foto em breve".
+- Se nenhum produto tiver `destaque: true`, a página inicial mostra os 3 primeiros.
 
-## Próximos passos sugeridos
+## Publicar no GitHub Pages
 
-1. Adicionar fotos reais dos produtos
-2. Criar página individual para cada produto
-3. Permitir escolha de cor/tamanho
-4. Melhorar personalização da mensagem do WhatsApp
-5. Criar painel administrativo
-6. Integrar Node.js + banco de dados, se fizer sentido para o projeto
-# AnaLu-Croches
-# AnaLu-Croches
-# AnaLu-Croches
+O repositório está em `github.com/gabrielsdl-dev/AnaLu-Croches`.
+
+1. No GitHub, abra o repositório e vá em **Settings → Pages**.
+2. Em **Build and deployment**, escolha **Deploy from a branch**.
+3. Selecione a branch `main` e a pasta `/ (root)` e clique em **Save**.
+4. Depois de alguns minutos o site fica disponível em `https://gabrielsdl-dev.github.io/AnaLu-Croches/`.
+
+Se o site for publicado em outro endereço, troque esse endereço nas tags `og:url` e `og:image` do `<head>` das 3 páginas (é o que gera a prévia do link no WhatsApp e no Instagram).

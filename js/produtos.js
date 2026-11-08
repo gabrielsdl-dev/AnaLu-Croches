@@ -1,63 +1,109 @@
 const PRODUTOS = [
   {
     id: 1,
-    nome: "Produto 1",
+    destaque: true,
+    nome: "Tapete Azul Redondo",
     categoria: "Crochê",
-    preco: 85,
-    imagem: "", // Ex.: "img/produtos/produto-1.jpg"
-    descricao: "Descrição do produto 1"
+    preco: 25,
+    imagem: "img/produtos/tapete-azul-redondo.webp",
+    descricao: "Tapete artesanal em crochê na cor azul, com formato redondo."
   },
+
   {
     id: 2,
-    nome: "Produto 2",
+    nome: "Tapete Marrom Retangular",
     categoria: "Crochê",
-    preco: 65,
-    imagem: "", // Ex.: "img/produtos/produto-2.jpg"
-    descricao: "Descrição do produto 2"
+    preco: 50,
+    imagem: "img/produtos/tapete-marrom-retangular.webp",
+    descricao: "Tapete retangular artesanal em tons de marrom, branco e bege."
   },
+
   {
     id: 3,
-    nome: "Produto 3",
+    nome: "Tapete Rosa",
     categoria: "Crochê",
-    preco: 32,
-    imagem: "", // Ex.: "img/produtos/produto-3.jpg"
-    descricao: "Descrição do produto 3"
+    preco: 40,
+    imagem: "img/produtos/tapete-rosa.webp",
+    descricao: "Tapete artesanal em tons de rosa com acabamento delicado."
   },
+
   {
     id: 4,
-    nome: "Produto 4",
+    nome: "Tapete Verde Retangular",
     categoria: "Crochê",
-    preco: 48,
-    imagem: "", // Ex.: "img/produtos/produto-4.jpg"
-    descricao: "Descrição do produto 4"
+    preco: 50,
+    imagem: "img/produtos/tapete-verde-retangular.webp",
+    descricao: "Tapete retangular em crochê com detalhes em verde e branco."
   },
+
   {
     id: 5,
-    nome: "Produto 5",
+    nome: "Tapete Oval Azul e Rosa",
     categoria: "Crochê",
-    preco: 72,
-    imagem: "", // Ex.: "img/produtos/produto-5.jpg"
-    descricao: "Descrição do produto 5"
+    preco: 35,
+    imagem: "img/produtos/tapete-oval-azul-rosa.webp",
+    descricao: "Tapete oval artesanal com detalhes em azul, rosa e branco."
   },
+
   {
     id: 6,
-    nome: "Produto 6",
+    nome: "Tapete Colorido",
     categoria: "Crochê",
-    preco: 58,
-    imagem: "", // Ex.: "img/produtos/produto-6.jpg"
-    descricao: "Descrição do produto 6"
+    preco: 35,
+    imagem: "img/produtos/tapete-colorido.webp",
+    descricao: "Tapete retangular em crochê com combinação de várias cores."
+  },
+
+  {
+    id: 7,
+    destaque: true,
+    nome: "Centro de Mesa Bordô",
+    categoria: "Crochê",
+    preco: 20,
+    imagem: "img/produtos/centro-de-mesa-bordo.webp",
+    descricao: "Centro de mesa artesanal em crochê na cor bordô com detalhe branco."
+  },
+
+  {
+    id: 8,
+    nome: "Tapete Oval Marrom e Branco",
+    categoria: "Crochê",
+    preco: 40,
+    imagem: "img/produtos/tapete-oval-marrom-branco.webp",
+    descricao: "Tapete oval artesanal em tons de marrom e branco."
+  },
+
+  {
+    id: 9,
+    destaque: true,
+    nome: "Conjunto de Tapetes",
+    categoria: "Crochê",
+    preco: 65,
+    imagem: "img/produtos/conjunto-de-tapetes.webp",
+    descricao: "Conjunto de tapetes oval."
   }
 ];
 
-// Compartilhado pelo catálogo e pelo carrinho. Deixe imagem vazia até ter a foto.
-function criarImagemProduto(produto) {
-  const escapar = (valor) => String(valor).replace(/[&<>"']/g, (char) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+
+// Escapa textos antes de inseri-los com innerHTML.
+function escaparHTML(valor) {
+  return String(valor).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
   }[char]));
+}
+
+// Compartilhado pelo catálogo e pelo carrinho.
+// Mostra a foto cadastrada para cada produto.
+function criarImagemProduto(produto) {
   return produto.imagem
-    ? `<img class="product-photo" src="${escapar(produto.imagem)}" alt="${escapar(produto.nome)}" loading="lazy">`
+    ? `<img class="product-photo" src="${escaparHTML(produto.imagem)}" alt="${escaparHTML(produto.nome)}" loading="lazy" decoding="async">`
     : '<span class="product-photo-placeholder">Foto em breve</span>';
 }
+
 
 function formatarMoeda(valor) {
   return valor.toLocaleString("pt-BR", {

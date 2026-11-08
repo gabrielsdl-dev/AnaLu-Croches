@@ -6,14 +6,15 @@
   --muted: #74645e;
   --primary: #a6604b;
   --primary-dark: #864836;
-  --accent: #d8ada0;
+  --on-primary: #ffffff;
+  --danger: #9f4b4b;
   --border: #eaded6;
-  --success: #2f8f5b;
   --shadow: 0 18px 45px rgba(79, 55, 45, 0.10);
   --radius-lg: 28px;
   --radius-md: 18px;
   --radius-sm: 12px;
   --container: 1180px;
+  --header-height: 78px;
 }
 
 * {
@@ -24,6 +25,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Âncoras (ex.: #sobre) não ficam escondidas atrás do header fixo. */
+  scroll-padding-top: calc(var(--header-height) + 12px);
 }
 
 body {
@@ -68,7 +71,8 @@ button {
 }
 
 .nav {
-  min-height: 78px;
+  position: relative;
+  min-height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -84,10 +88,15 @@ button {
 }
 
 .brand-logo {
-  width: clamp(140px, 18vw, 180px);
   height: auto;
   display: block;
   filter: brightness(0);
+}
+
+/* No header a logo é limitada pela altura, para não deixar o header alto demais. */
+.site-header .brand-logo {
+  width: auto;
+  height: 64px;
 }
 
 .footer-brand .brand-logo {
@@ -95,7 +104,7 @@ button {
   max-width: 100%;
 }
 
-body.dark-mode .brand-logo {
+.dark-mode .brand-logo {
   filter: none;
 }
 
@@ -113,6 +122,12 @@ body.dark-mode .brand-logo {
 .nav-links a:hover,
 .nav-links a.active {
   color: var(--primary);
+}
+
+.nav-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .product-cart-bar {
@@ -160,8 +175,9 @@ body:has(.product-cart-bar) {
   padding: 0 7px;
   border-radius: 999px;
   background: var(--primary);
-  color: white;
+  color: var(--on-primary);
   font-size: .8rem;
+  font-weight: 700;
 }
 
 .menu-toggle {
@@ -240,16 +256,11 @@ h2 {
 
 .btn-primary {
   background: var(--primary);
-  color: white;
+  color: var(--on-primary);
 }
 
 .btn-primary:hover {
   background: var(--primary-dark);
-}
-
-.btn-secondary {
-  border-color: var(--border);
-  background: var(--surface);
 }
 
 .btn-whatsapp {
@@ -282,67 +293,17 @@ h2 {
   object-position: center;
 }
 
-.yarn {
-  position: absolute;
-  border-radius: 50%;
-  border: 22px solid rgba(255,255,255,.35);
-}
-
-.yarn-one {
-  width: 170px;
-  height: 170px;
-  right: 40px;
-  top: 46px;
-}
-
-.yarn-two {
-  width: 230px;
-  height: 230px;
-  left: -45px;
-  bottom: -55px;
-}
-
-.crochet-card {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(78%, 320px);
-  transform: translate(-50%, -50%);
-  padding: 30px;
-  border-radius: var(--radius-lg);
-  background: rgba(255,255,255,.88);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 20px 50px rgba(71, 46, 38, .16);
-  text-align: center;
-}
-
-.crochet-card span {
-  display: block;
-  font-size: 4rem;
-  margin-bottom: 10px;
-}
-
-.crochet-card strong,
-.crochet-card small {
-  display: block;
-}
-
-.crochet-card strong {
-  font-family: "Playfair Display", serif;
-  font-size: 1.45rem;
-}
-
-.crochet-card small {
-  color: var(--muted);
-  margin-top: 8px;
-}
-
 .section {
   padding: 76px 0;
 }
 
 .section-soft {
   background: var(--surface-soft);
+}
+
+/* Seção que continua a anterior, sem repetir o espaçamento de cima. */
+.section-continua {
+  padding-top: 0;
 }
 
 .section-heading {
@@ -396,7 +357,9 @@ h2 {
 }
 
 .product-visual {
-  aspect-ratio: 4 / 3;
+  /* As fotos são retrato (3:4); o quadrado mostra as peças inteiras sem deixar o card alto demais. */
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
   display: grid;
   place-items: center;
   background: linear-gradient(145deg, #f6e8e0, #ead4ca);
@@ -493,6 +456,7 @@ h2 {
 
 .add-cart:hover {
   background: var(--primary);
+  color: var(--on-primary);
 }
 
 .section-cta {
@@ -524,12 +488,8 @@ h2 {
   border: 1px solid var(--border);
 }
 
-.benefit-card span {
-  font-size: 2rem;
-}
-
 .benefit-card h3 {
-  margin: 14px 0 8px;
+  margin-bottom: 8px;
 }
 
 .benefit-card p {
@@ -550,6 +510,11 @@ h2 {
 
 .page-hero p {
   margin-top: 14px;
+}
+
+.page-hero .price-notice {
+  margin-top: 8px;
+  font-size: .9rem;
 }
 
 .catalog-toolbar {
@@ -677,12 +642,13 @@ h2 {
   border: 1px solid var(--border);
   border-radius: 50%;
   background: var(--bg);
+  color: var(--text);
 }
 
 .remove-item {
   border: 0;
   background: transparent;
-  color: #9f4b4b;
+  color: var(--danger);
   margin-top: 8px;
   font-size: .86rem;
 }
@@ -693,7 +659,7 @@ h2 {
 
 .cart-summary {
   position: sticky;
-  top: 102px;
+  top: calc(var(--header-height) + 24px);
   padding: 24px;
   border-radius: var(--radius-md);
   background: var(--surface);
@@ -822,7 +788,7 @@ h2 {
 
 .footer-social a:first-child {
   background: var(--primary-dark);
-  color: var(--surface);
+  color: var(--on-primary);
 }
 
 .footer-social svg {
@@ -843,12 +809,6 @@ h2 {
   outline-offset: 4px;
 }
 
-.footer-content strong {
-  color: var(--text);
-  font-family: "Playfair Display", serif;
-  font-size: 1.2rem;
-}
-
 .toast {
   position: fixed;
   right: 22px;
@@ -856,7 +816,7 @@ h2 {
   max-width: calc(100vw - 44px);
   z-index: 50;
   background: var(--text);
-  color: white;
+  color: var(--bg);
   padding: 13px 16px;
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow);
@@ -899,9 +859,9 @@ h2 {
 
   .nav-links {
     position: absolute;
-    left: 16px;
-    right: 16px;
-    top: 70px;
+    left: 0;
+    right: 0;
+    top: calc(100% + 8px);
     display: none;
     flex-direction: column;
     align-items: stretch;
@@ -917,7 +877,8 @@ h2 {
     display: flex;
   }
 
-  .nav-links a {
+  .nav-links a,
+  .nav-links .theme-control {
     padding: 10px;
   }
 
@@ -955,29 +916,10 @@ h2 {
 }
 
 
-/*Modo Escuro*/
-
-.theme-toggle {
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  background: var(--surface);
-  color: var(--text);
-  font-size: 1.1rem;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  border-color: var(--primary);
-}
-
-/* Modo escuro */
-body.dark-mode {
+/* Modo escuro
+   A classe fica no <html> (aplicada por um script no <head> antes da
+   renderização), para a página não piscar no tema claro ao carregar. */
+html.dark-mode {
   --bg: #181514;
   --surface: #24201e;
   --surface-soft: #2d2724;
@@ -985,16 +927,18 @@ body.dark-mode {
   --muted: #bdaea6;
   --primary: #d99176;
   --primary-dark: #bc7158;
-  --accent: #9f6757;
+  /* Texto escuro sobre o --primary claro do tema escuro (contraste ≥ 4,5:1). */
+  --on-primary: #181514;
+  --danger: #f0a19b;
   --border: #403733;
   --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
 }
 
-body.dark-mode .site-header {
+.dark-mode .site-header {
   background: rgba(24, 21, 20, 0.93);
 }
 
-body.dark-mode .hero-art {
+.dark-mode .hero-art {
   background:
     radial-gradient(
       circle at 30% 30%,
@@ -1002,10 +946,6 @@ body.dark-mode .hero-art {
       transparent 30%
     ),
     linear-gradient(145deg, #55372f, #372724);
-}
-
-body.dark-mode .crochet-card {
-  background: rgba(36, 32, 30, 0.9);
 }
 
 .theme-control {

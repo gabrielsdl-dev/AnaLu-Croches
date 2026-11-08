@@ -3,22 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Carrinho de encomendas da Ana Crochê.">
-  <title>Carrinho | Ana Crochê</title>
+  <!-- Aplica o tema antes da renderização, para a página não piscar no tema claro. -->
+  <script>
+    (function () {
+      var tema = null;
+      try { tema = localStorage.getItem("tema"); } catch (erro) {}
+      var escuro = tema ? tema === "escuro"
+        : !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      if (escuro) document.documentElement.classList.add("dark-mode");
+    })();
+  </script>
+  <title>Minha encomenda | AnaLu Crochês</title>
+  <meta name="description" content="Revise sua encomenda na AnaLu Crochês e finalize o pedido pelo WhatsApp.">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+  <!-- Prévia em WhatsApp/Instagram. og:url e og:image precisam de URL absoluta:
+       ao publicar em outro endereço, trocar "https://gabrielsdl-dev.github.io/AnaLu-Croches/" nas 3 páginas. -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="AnaLu Crochês">
+  <meta property="og:title" content="Minha encomenda | AnaLu Crochês">
+  <meta property="og:description" content="Peças de crochê feitas à mão, sob encomenda. Escolha seus favoritos e finalize pelo WhatsApp.">
+  <meta property="og:url" content="https://gabrielsdl-dev.github.io/AnaLu-Croches/carrinho.html">
+  <meta property="og:image" content="https://gabrielsdl-dev.github.io/AnaLu-Croches/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Bolsa de crochê em algodão cru com novelos em tons terrosos.">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="index.html" aria-label="Crochês Analu — Início"><img class="brand-logo" src="img/logo-analu-transparente.png" alt="Crochês Analu — Crochê feito com amor" width="240" height="168"></a>
-      <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
-      <nav class="nav-links">
+      <a class="brand" href="index.html" aria-label="AnaLu Crochês — Início"><img class="brand-logo" src="img/logo-analu-transparente.webp" alt="AnaLu Crochês — Crochê feito com amor" width="480" height="335"></a>
+
+      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-principal">☰</button>
+
+      <nav class="nav-links" id="menu-principal" aria-label="Menu principal">
         <a href="index.html">Início</a>
         <a href="index.html#sobre">Sobre</a>
         <a href="produtos.html">Produtos</a>
+        <a class="nav-cart active" href="carrinho.html" aria-current="page" aria-label="Minha encomenda, 0 itens">
+          Minha encomenda
+          <span class="cart-count" aria-hidden="true">0</span>
+        </a>
         <div class="theme-control">
           <span id="theme-label" aria-live="polite">Tema claro</span>
           <label class="theme-switch">
@@ -90,22 +121,22 @@
   <footer class="site-footer">
     <div class="container footer-content">
       <div>
-        <a class="brand footer-brand" href="index.html" aria-label="Crochês Analu — Início"><img class="brand-logo" src="img/logo-analu-transparente.png" alt="Crochês Analu — Crochê feito com amor" width="240" height="168"></a>
+        <a class="brand footer-brand" href="index.html" aria-label="AnaLu Crochês — Início"><img class="brand-logo" src="img/logo-analu-transparente.webp" alt="AnaLu Crochês — Crochê feito com amor" width="480" height="335" loading="lazy"></a>
         <p class="footer-description">Cada ponto, um carinho. Peças feitas à mão para deixar o seu dia mais especial.</p>
       </div>
       <div class="footer-contact">
         <h2>Vamos criar algo especial?</h2>
         <p>Me conte sua ideia pelo WhatsApp ou acompanhe as novidades no Instagram.</p>
         <nav class="footer-social" aria-label="Redes sociais">
-        <!-- Links fictícios: substituir pelos contatos reais. -->
-        <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer">
+        <!-- Os links são preenchidos por js/config.js; o href abaixo é só reserva. -->
+        <a href="https://wa.me/5511999999999" data-contato="whatsapp" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.5L3 20.5l1.3-4.8a8.5 8.5 0 1 1 16.2-4Z"/>
             <path d="m8.1 7.2 1.5-.2 1.1 2.6-1.1 1.1a7.2 7.2 0 0 0 3.6 3.6l1.1-1.1 2.6 1.1-.2 1.5c-.1.9-1 1.5-1.9 1.3-4.3-.8-7.6-4.1-8.4-8.4-.2-.9.4-1.8 1.3-1.9Z"/>
           </svg>
           <span>WhatsApp</span>
         </a>
-        <a href="https://www.instagram.com/ana.croche.exemplo/" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.instagram.com/USUARIO/" data-contato="instagram" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8">
             <rect x="3" y="3" width="18" height="18" rx="5"/>
             <circle cx="12" cy="12" r="4"/>
@@ -117,7 +148,7 @@
       </div>
     </div>
   </footer>
-
+  <script src="js/config.js"></script>
   <script src="js/produtos.js"></script>
   <script src="js/carrinho.js"></script>
   <script src="js/main.js"></script>
