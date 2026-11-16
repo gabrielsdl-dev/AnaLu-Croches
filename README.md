@@ -4,15 +4,17 @@ Projeto acadêmico de uma vitrine virtual para venda de peças artesanais em cro
 
 ## Funcionalidades atuais
 
-- Página inicial responsiva, com produtos em destaque
+- Página inicial responsiva, com produtos em destaque, "Como funciona" e perguntas frequentes
 - Catálogo de produtos
+- Detalhe de cada peça numa janela, com link próprio para compartilhar (ex.: `produtos.html#tapete-rosa`)
 - Filtro por categoria (aparece quando houver mais de uma categoria)
 - Busca de produtos (ignora acentos e maiúsculas)
 - Carrinho usando `localStorage`
 - Alteração de quantidade
 - Exclusão de itens
 - Total estimado do pedido
-- Campo para nome e observações
+- Campo de cores e detalhes em cada peça do carrinho
+- Campo para nome e observações gerais
 - Finalização da encomenda pelo WhatsApp
 - Tema claro e escuro (segue o sistema quando não há escolha salva)
 - Layout responsivo para celular
@@ -31,8 +33,10 @@ AnaLu-Croches/
 │   ├── produtos.js      ← catálogo de produtos
 │   ├── carrinho.js
 │   └── main.js
+├── tests/
+│   └── carrinho.test.js ← testes automáticos do carrinho e do catálogo
 └── img/
-    ├── croche-artesanal-hero.webp
+    ├── tapetes-croche-hero.webp   ← foto da página inicial
     ├── logo-analu-transparente.webp
     ├── favicon-32.png
     ├── apple-touch-icon.png
@@ -58,8 +62,8 @@ js/config.js
 ```js
 const CONFIG = {
   nomeLoja: "AnaLu Crochês",
-  whatsapp: "5511999999999", // 55 + DDD + número, só dígitos
-  instagram: "https://www.instagram.com/USUARIO/"
+  whatsapp: "5511977066682", // 55 + DDD + número, só dígitos
+  instagram: "https://www.instagram.com/analu.croches_/"
 };
 ```
 
@@ -78,12 +82,13 @@ Exemplo:
 ```js
 {
   id: 10,
-  nome: "Bolsa Aurora",
-  categoria: "Bolsas",
+  nome: "Tapete Girassol",
+  categoria: "Tapetes",
   preco: 85,
-  imagem: "img/produtos/bolsa-aurora.webp",
-  descricao: "Bolsa artesanal em crochê.",
-  destaque: true // opcional: aparece em "Destaques" na página inicial
+  imagem: "img/produtos/tapete-girassol.webp",
+  descricao: "Tapete redondo artesanal em crochê.",
+  destaque: true, // opcional: aparece em "Destaques" na página inicial
+  medidas: "80 cm de diâmetro" // opcional: aparece no detalhe da peça
 }
 ```
 
@@ -91,6 +96,21 @@ Exemplo:
 - Coloque a foto em `img/produtos/`. De preferência em WebP, com até ~800px de largura e menos de 100 KB.
 - Sem `imagem`, o card mostra "Foto em breve".
 - Se nenhum produto tiver `destaque: true`, a página inicial mostra os 3 primeiros.
+- O link de cada peça é gerado a partir do `nome` ("Tapete Rosa" vira `#tapete-rosa`). Se mudar o nome, links antigos já compartilhados deixam de abrir a peça.
+
+## Perguntas frequentes
+
+As perguntas e respostas ficam direto no `index.html`, na seção `id="duvidas"`. Cada pergunta é um bloco `<details class="faq-item">`: para incluir uma nova, copie um bloco e troque o texto.
+
+## Testes
+
+Os testes usam só o Node.js (versão 18 ou mais nova), sem instalar nada. Na pasta do projeto:
+
+```bash
+node --test tests/
+```
+
+Eles conferem o carrinho (adicionar, alterar, remover, detalhes de cada peça, carrinhos salvos em formatos antigos), a mensagem enviada pelo WhatsApp, a busca, os links das peças e se os dados de `js/produtos.js` estão completos (incluindo se as fotos existem). Rode antes de cada commit.
 
 ## Publicar no GitHub Pages
 

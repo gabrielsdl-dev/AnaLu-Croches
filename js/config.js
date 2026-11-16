@@ -3,6 +3,6 @@
 // altere apenas os valores abaixo.
 const CONFIG = {
   nomeLoja: "AnaLu Crochês",
-  whatsapp: "5511999999999", // 55 + DDD + número, só dígitos (número fictício: trocar pelo real)
-  instagram: "https://www.instagram.com/USUARIO/" // trocar USUARIO pelo perfil real
+  whatsapp: "5511977066682", // 55 + DDD + número, só dígitos: (11) 97706-6682
+  instagram: "https://www.instagram.com/analu.croches_/" // @analu.croches_
 };
