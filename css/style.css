@@ -426,6 +426,19 @@ h2 {
   font-size: 1.22rem;
 }
 
+/* Cores da peça que aparece na foto (as cores são personalizáveis). */
+.product-colors {
+  margin: -4px 0 8px;
+  color: var(--muted);
+  font-size: .84rem;
+  font-style: italic;
+}
+
+.product-modal-content .product-colors,
+.cart-item .product-colors {
+  margin: 0;
+}
+
 .product-description {
   min-height: 52px;
   color: var(--muted);

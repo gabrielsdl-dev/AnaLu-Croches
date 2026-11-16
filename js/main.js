@@ -3,9 +3,12 @@ function normalizar(texto) {
   return String(texto).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
 
-// Identificador do produto usado no link direto: "Tapete Rosa" -> "tapete-rosa".
+// Identificador do produto usado no link direto: "Sousplat Redondo" -> "sousplat-redondo".
+// Peças do mesmo modelo (mesmo nome) ganham o id no final: "tapete-oval-grande-3".
 function slugProduto(produto) {
-  return normalizar(produto.nome).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const base = (item) => normalizar(item.nome).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const repetido = PRODUTOS.some((outro) => outro.id !== produto.id && base(outro) === base(produto));
+  return repetido ? `${base(produto)}-${produto.id}` : base(produto);
 }
 
 function buscarProdutoPorSlug(slug) {
@@ -20,11 +23,15 @@ function linkProduto(produto) {
 function criarCardProduto(produto) {
   const id = Number(produto.id);
   const nome = escaparHTML(produto.nome);
+  const nomeCompleto = escaparHTML(nomeComCores(produto));
+  const cores = produto.cores
+    ? `<p class="product-colors">Cores da foto: ${escaparHTML(produto.cores)}</p>`
+    : "";
 
   return `
     <article class="product-card">
       <div class="product-visual">
-        <span class="product-badge">Sob encomenda</span>
+        <span class="product-badge">Cores personalizáveis</span>
         ${criarImagemProduto(produto)}
       </div>
 
@@ -33,6 +40,7 @@ function criarCardProduto(produto) {
         <h3>
           <a class="product-link" href="produtos.html#${slugProduto(produto)}" data-abrir-produto="${id}">${nome}</a>
         </h3>
+        ${cores}
         <p class="product-description">${escaparHTML(produto.descricao)}</p>
 
         <div class="product-footer">
@@ -45,7 +53,7 @@ function criarCardProduto(produto) {
             class="add-cart"
             type="button"
             data-adicionar="${id}"
-            aria-label="Adicionar ${nome} à encomenda"
+            aria-label="Adicionar ${nomeCompleto} à encomenda"
           >
             + Encomenda
           </button>
@@ -93,7 +101,7 @@ function iniciarCatalogo() {
       const bateCategoria =
         categoriaAtual === "Todos" || produto.categoria === categoriaAtual;
 
-      const conteudo = normalizar(`${produto.nome} ${produto.categoria} ${produto.descricao}`);
+      const conteudo = normalizar(`${produto.nome} ${produto.categoria} ${produto.descricao} ${produto.cores || ""}`);
       const bateBusca = conteudo.includes(termo);
 
       return bateCategoria && bateBusca;
@@ -151,6 +159,7 @@ function criarModalProduto() {
       <div class="product-modal-content">
         <span class="product-category" data-campo="categoria"></span>
         <h2 id="product-modal-title" data-campo="nome"></h2>
+        <p class="product-colors hidden" data-campo="cores"></p>
         <p class="product-modal-description" data-campo="descricao"></p>
         <p class="product-modal-measures hidden" data-campo="medidas"></p>
         <div class="product-price product-modal-price">
@@ -158,8 +167,8 @@ function criarModalProduto() {
           <strong data-campo="preco"></strong>
         </div>
         <p class="product-modal-note">
-          Peça feita à mão, sob encomenda. Cores e detalhes podem ser combinados:
-          anote o que você quer no carrinho.
+          Peça feita à mão, sob encomenda. A foto é um exemplo: você escolhe as cores
+          e pode anotar os detalhes no carrinho.
         </p>
         <div class="product-modal-actions">
           <button class="btn btn-primary" type="button" data-modal-adicionar>+ Adicionar à encomenda</button>
@@ -201,6 +210,8 @@ function preencherModalProduto(produto) {
   campo("categoria").textContent = produto.categoria;
   campo("nome").textContent = produto.nome;
   campo("descricao").textContent = produto.descricao;
+  campo("cores").textContent = produto.cores ? `Cores da foto: ${produto.cores}` : "";
+  campo("cores").classList.toggle("hidden", !produto.cores);
   campo("preco").textContent = formatarMoeda(produto.preco);
 
   // Campo opcional em js/produtos.js (ex.: medidas: "60 x 40 cm").
@@ -208,7 +219,7 @@ function preencherModalProduto(produto) {
   campo("medidas").classList.toggle("hidden", !produto.medidas);
 
   modalProduto.querySelector("[data-modal-adicionar]")
-    .setAttribute("aria-label", `Adicionar ${produto.nome} à encomenda`);
+    .setAttribute("aria-label", `Adicionar ${nomeComCores(produto)} à encomenda`);
 }
 
 function abrirModalProduto(produto, { porClique = false } = {}) {

@@ -63,7 +63,7 @@ function criarSite({ carrinhoSalvo } = {}) {
     lerCarrinhoSalvo, obterCarrinho, adicionarAoCarrinho, alterarQuantidade,
     removerDoCarrinho, atualizarDetalhes, quantidadeTotalCarrinho,
     montarMensagemWhatsApp, finalizarNoWhatsApp,
-    normalizar, slugProduto, buscarProdutoPorSlug, linkProduto, escaparHTML, formatarMoeda
+    normalizar, slugProduto, buscarProdutoPorSlug, linkProduto, escaparHTML, formatarMoeda, nomeComCores
   })`, contexto);
 
   return {
@@ -174,21 +174,22 @@ test("detalhes vazios não são guardados", () => {
 /* ---------- Mensagem do WhatsApp ---------- */
 
 test("monta a mensagem com nome, peças, detalhes, total e observações", () => {
-  site.adicionarAoCarrinho(1); // Tapete Azul Redondo, R$ 25
-  site.adicionarAoCarrinho(3); // Tapete Rosa, R$ 40
+  site.adicionarAoCarrinho(1); // Sousplat Redondo, R$ 25
+  site.adicionarAoCarrinho(3); // Tapete Oval Grande (tons de rosa), R$ 40
   site.adicionarAoCarrinho(3);
   site.atualizarDetalhes(3, "  tons de\nlilás  ");
 
   const mensagem = site.montarMensagemWhatsApp(site.obterCarrinho(), "Gabriel", "Retiro no sábado");
   const brl = (valor) => site.formatarMoeda(valor);
+  const [sousplat, ovalRosa] = [1, 3].map((id) => site.PRODUTOS.find((p) => p.id === id));
 
   assert.equal(mensagem, [
     `Olá! Vim pelo site da ${site.CONFIG.nomeLoja} e gostaria de fazer uma encomenda.`,
     "*Nome:* Gabriel",
     [
       "*Peças escolhidas:*",
-      `- 1x Tapete Azul Redondo: ${brl(25)}`,
-      `- 2x Tapete Rosa: ${brl(80)} (${brl(40)} cada)`,
+      `- 1x ${sousplat.nome} (foto: ${sousplat.cores}): ${brl(25)}`,
+      `- 2x ${ovalRosa.nome} (foto: ${ovalRosa.cores}): ${brl(80)} (${brl(40)} cada)`,
       "   Detalhes: tons de lilás"
     ].join("\n"),
     `*Total estimado:* ${brl(105)}`,
@@ -238,9 +239,9 @@ test("cada produto tem um link único e o link encontra o produto de volta", () 
     assert.match(site.slugProduto(produto), /^[a-z0-9]+(-[a-z0-9]+)*$/);
     assert.equal(site.buscarProdutoPorSlug(site.slugProduto(produto)).id, produto.id);
   }
-  assert.equal(site.slugProduto({ nome: "Centro de Mesa Bordô" }), "centro-de-mesa-bordo");
+  assert.equal(site.slugProduto({ id: 100, nome: "Centro de Mesa Bordô" }), "centro-de-mesa-bordo");
   assert.equal(
-    site.linkProduto({ nome: "Tapete Rosa" }),
+    site.linkProduto({ id: 100, nome: "Tapete Rosa" }),
     "https://exemplo.github.io/AnaLu-Croches/produtos.html#tapete-rosa"
   );
 });
@@ -260,4 +261,26 @@ test("os dados do catálogo estão completos", () => {
       assert.ok(fs.existsSync(path.join(RAIZ, p.imagem)), `foto não encontrada: ${p.imagem}`);
     }
   }
+});
+
+/* ---------- Peças do mesmo modelo (mesmo nome, cores diferentes) ---------- */
+
+test("peças com o mesmo nome ganham o id no link, e as outras não", () => {
+  const repetidos = site.PRODUTOS.filter((p) =>
+    site.PRODUTOS.some((o) => o.id !== p.id && o.nome === p.nome));
+  assert.ok(repetidos.length >= 2, "o catálogo deveria ter peças do mesmo modelo");
+  for (const p of repetidos) assert.match(site.slugProduto(p), new RegExp(`-${p.id}$`));
+
+  const unico = site.PRODUTOS.find((p) => !repetidos.includes(p));
+  assert.doesNotMatch(site.slugProduto(unico), new RegExp(`-${unico.id}$`));
+});
+
+test("peças do mesmo modelo se diferenciam pelas cores da foto", () => {
+  const nomes = site.PRODUTOS.map(site.nomeComCores);
+  assert.equal(new Set(nomes).size, nomes.length, "duas peças com o mesmo nome e as mesmas cores");
+});
+
+test("os nomes não citam cores (as cores ficam no campo cores)", () => {
+  const corNoNome = /(azul|rosa|verde|marrom|branco|bord[oô]|colorido|bege|cru)/i;
+  for (const p of site.PRODUTOS) assert.doesNotMatch(p.nome, corNoNome, `cor no nome: ${p.nome}`);
 });

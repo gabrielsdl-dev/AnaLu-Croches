@@ -171,6 +171,8 @@ function renderizarCarrinho() {
 
   container.innerHTML = carrinho.map((item) => {
     const nome = escaparHTML(item.nome);
+    // Nome + cores da foto: diferencia peças do mesmo modelo para o leitor de tela.
+    const nomeCompleto = escaparHTML(nomeComCores(item));
     const id = Number(item.id);
 
     return `
@@ -179,20 +181,21 @@ function renderizarCarrinho() {
 
       <div class="cart-item-info">
         <h3 id="item-nome-${id}">${nome}</h3>
+        ${item.cores ? `<p class="product-colors" id="item-cores-${id}">Cores da foto: ${escaparHTML(item.cores)}</p>` : ""}
         <p>${escaparHTML(item.categoria)} • Produzido sob encomenda</p>
 
         <div class="quantity-controls">
-          <button type="button" data-acao="diminuir" data-id="${id}" aria-label="Diminuir quantidade de ${nome}">−</button>
+          <button type="button" data-acao="diminuir" data-id="${id}" aria-label="Diminuir quantidade de ${nomeCompleto}">−</button>
           <strong>${item.quantidade}</strong>
-          <button type="button" data-acao="aumentar" data-id="${id}" aria-label="Aumentar quantidade de ${nome}">+</button>
+          <button type="button" data-acao="aumentar" data-id="${id}" aria-label="Aumentar quantidade de ${nomeCompleto}">+</button>
         </div>
 
         <label class="item-details">
           <span id="item-detalhes-${id}">Cores e detalhes desta peça <small>(opcional)</small></span>
-          <textarea rows="2" aria-labelledby="item-detalhes-${id} item-nome-${id}" maxlength="${LIMITE_DETALHES}" data-detalhes-id="${id}" placeholder="Ex.: borda azul-marinho, centro bege">${escaparHTML(item.detalhes || "")}</textarea>
+          <textarea rows="2" aria-labelledby="item-detalhes-${id} item-nome-${id} item-cores-${id}" maxlength="${LIMITE_DETALHES}" data-detalhes-id="${id}" placeholder="Ex.: borda azul-marinho, centro bege">${escaparHTML(item.detalhes || "")}</textarea>
         </label>
 
-        <button class="remove-item" type="button" data-acao="remover" data-id="${id}" aria-label="Remover ${nome} da encomenda">
+        <button class="remove-item" type="button" data-acao="remover" data-id="${id}" aria-label="Remover ${nomeCompleto} da encomenda">
           Remover
         </button>
       </div>
@@ -249,7 +252,9 @@ function montarMensagemWhatsApp(carrinho, nome, observacoes) {
     const subtotal = formatarMoeda(item.preco * item.quantidade);
     const cada = item.quantidade > 1 ? ` (${formatarMoeda(item.preco)} cada)` : "";
     const detalhes = (item.detalhes || "").trim().replace(/\s+/g, " ");
-    const linha = `- ${item.quantidade}x ${item.nome}: ${subtotal}${cada}`;
+    // A cor da foto entra na mensagem para a artesã saber qual peça a cliente viu.
+    const foto = item.cores ? ` (foto: ${item.cores})` : "";
+    const linha = `- ${item.quantidade}x ${item.nome}${foto}: ${subtotal}${cada}`;
     return detalhes ? `${linha}\n   Detalhes: ${detalhes}` : linha;
   });
 

@@ -82,21 +82,24 @@ Exemplo:
 ```js
 {
   id: 10,
-  nome: "Tapete Girassol",
-  categoria: "Tapetes",
+  nome: "Tapete Redondo Grande",   // o modelo da peça, sem cor
+  categoria: "Crochê",
   preco: 85,
-  imagem: "img/produtos/tapete-girassol.webp",
-  descricao: "Tapete redondo artesanal em crochê.",
+  imagem: "img/produtos/tapete-redondo-amarelo.webp",
+  cores: "amarelo com borda cru",  // só as cores da peça da foto
+  descricao: "Tapete redondo artesanal em crochê, em tamanho grande.",
   destaque: true, // opcional: aparece em "Destaques" na página inicial
   medidas: "80 cm de diâmetro" // opcional: aparece no detalhe da peça
 }
 ```
 
 - `id` precisa ser único.
+- O `nome` é o **modelo** da peça, sem cor, porque a cliente escolhe as cores. As cores da peça da foto vão em `cores` e aparecem como "Cores da foto" no card, no carrinho e na mensagem do WhatsApp.
+- Duas peças do mesmo modelo podem ter o mesmo `nome` (ex.: dois "Tapete Oval Grande" em cores diferentes); o `cores` é o que diferencia uma da outra.
 - Coloque a foto em `img/produtos/`. De preferência em WebP, com até ~800px de largura e menos de 100 KB.
 - Sem `imagem`, o card mostra "Foto em breve".
 - Se nenhum produto tiver `destaque: true`, a página inicial mostra os 3 primeiros.
-- O link de cada peça é gerado a partir do `nome` ("Tapete Rosa" vira `#tapete-rosa`). Se mudar o nome, links antigos já compartilhados deixam de abrir a peça.
+- O link de cada peça é gerado a partir do `nome` ("Sousplat Redondo" vira `#sousplat-redondo`). Peças com o mesmo nome ganham o `id` no final (`#tapete-oval-grande-3`). Se mudar o nome, links antigos já compartilhados deixam de abrir a peça.
 
 ## Perguntas frequentes
 
